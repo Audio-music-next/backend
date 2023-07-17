@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRecordingDto } from './dto/create-recording.dto';
 import { UpdateRecordingDto } from './dto/update-recording.dto';
+import { RecordingRepository } from './repository/recording.repository';
 
 @Injectable()
 export class RecordingService {
+  constructor(private recordingRepository: RecordingRepository) {}
+
   create(createRecordingDto: CreateRecordingDto) {
-    return 'This action adds a new recording';
+    return this.recordingRepository.create(createRecordingDto);
   }
 
   findAll() {
-    return `This action returns all recording`;
+    return this.recordingRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} recording`;
+  findOne(recordingId: number) {
+    return this.recordingRepository.findOne(recordingId);
   }
 
   update(id: number, updateRecordingDto: UpdateRecordingDto) {

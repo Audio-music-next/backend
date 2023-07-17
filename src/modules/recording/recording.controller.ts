@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { RecordingService } from './recording.service';
 import { CreateRecordingDto } from './dto/create-recording.dto';
 import { UpdateRecordingDto } from './dto/update-recording.dto';
@@ -17,13 +25,17 @@ export class RecordingController {
     return this.recordingService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.recordingService.findOne(+id);
+  @Get(':recordingId')
+  findOne(@Param('recordingId') id: string) {
+    const recordingId = parseInt(id);
+    return this.recordingService.findOne(recordingId);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecordingDto: UpdateRecordingDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateRecordingDto: UpdateRecordingDto,
+  ) {
     return this.recordingService.update(+id, updateRecordingDto);
   }
 
