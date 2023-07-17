@@ -6,18 +6,27 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
+  Bind,
 } from '@nestjs/common';
 import { RecordingService } from './recording.service';
 import { CreateRecordingDto } from './dto/create-recording.dto';
 import { UpdateRecordingDto } from './dto/update-recording.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('recording')
 export class RecordingController {
   constructor(private readonly recordingService: RecordingService) {}
 
+  @UseInterceptors(FileInterceptor('audio'))
+  @Bind(UploadedFile())
   @Post()
-  create(@Body() createRecordingDto: CreateRecordingDto) {
-    return this.recordingService.create(createRecordingDto);
+  create(
+    @UploadedFile() audio: Express.Multer.File,
+    @Body() createRecordingDto: CreateRecordingDto,
+  ) {
+    return this.recordingService.create(createRecordingDto, audio);
   }
 
   @Get()

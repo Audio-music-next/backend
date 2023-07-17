@@ -5,6 +5,7 @@ export class RecordingPrismaRepository {
   constructor(private prisma: PrismaService) {}
 
   async create(recording: CreateRecordingDto) {
+    console.log(recording);
     return await this.prisma.recording.create({ data: recording });
   }
 }

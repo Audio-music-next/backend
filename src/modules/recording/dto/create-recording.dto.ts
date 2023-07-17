@@ -7,5 +7,5 @@ export class CreateRecordingDto {
 
   @IsNotEmpty()
   @IsString()
-  src: string;
+  audio: Express.Multer.File;
 }
