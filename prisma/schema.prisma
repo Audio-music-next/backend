@@ -9,3 +9,13 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Recording {
+
+  id Int @id @default(autoincrement())
+  title String
+  src String
+  date DateTime @default(now())
+
+  @@map("recordings")
+}
