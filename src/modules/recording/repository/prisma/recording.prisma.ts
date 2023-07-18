@@ -22,9 +22,15 @@ export class RecordingPrismaRepository implements RecordingRepository {
   }
 
   async findAll(): Promise<Recording[]> {
-    return;
+    const recording = await this.prisma.recording.findMany();
+
+    return recording;
   }
-  async findOne(): Promise<Recording> {
-    return;
+  async findOne(recordingId: number): Promise<Recording> {
+    const recording = await this.prisma.recording.findFirst({
+      where: { id: recordingId },
+    });
+
+    return recording;
   }
 }
