@@ -89,7 +89,13 @@ export class RecordingService {
     return await this.recordingRepository.update(updateRecording, recordingId);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} recording`;
+  async remove(recordingId: number) {
+    const findRecording = await this.recordingRepository.findOne(recordingId);
+
+    if (!findRecording) {
+      throw new NotFoundException('The recording not found');
+    }
+
+    return await this.recordingRepository.delete(recordingId);
   }
 }

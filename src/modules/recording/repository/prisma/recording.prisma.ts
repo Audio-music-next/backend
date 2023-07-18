@@ -34,6 +34,7 @@ export class RecordingPrismaRepository implements RecordingRepository {
 
     return recording;
   }
+  
   async update(
     updateRecording: UpdateRecordingDto,
     recordingId: number,
@@ -45,4 +46,9 @@ export class RecordingPrismaRepository implements RecordingRepository {
 
     return newRecording;
   }
+  
+   async delete(recordingId: number): Promise<void> {
+    await this.prisma.recording.delete({ where: { id: recordingId } });
+  }
+  
 }

@@ -12,4 +12,5 @@ export abstract class RecordingRepository {
     updateRecording: UpdateRecordingDto,
     recordingId: number,
   ): Promise<Recording> | Recording;
+  abstract delete(recordingId: number): Promise<void>;
 }
