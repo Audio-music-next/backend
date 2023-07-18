@@ -34,21 +34,20 @@ export class RecordingPrismaRepository implements RecordingRepository {
 
     return recording;
   }
-  
+
   async update(
-    updateRecording: UpdateRecordingDto,
+    data: UpdateRecordingDto,
     recordingId: number,
   ): Promise<Recording> {
     const newRecording = await this.prisma.recording.update({
       where: { id: recordingId },
-      data: updateRecording,
+      data: { ...data },
     });
 
     return newRecording;
   }
-  
-   async delete(recordingId: number): Promise<void> {
+
+  async delete(recordingId: number): Promise<void> {
     await this.prisma.recording.delete({ where: { id: recordingId } });
   }
-  
 }

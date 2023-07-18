@@ -75,10 +75,13 @@ export class RecordingService {
         },
       );
 
-      const newRecording = await this.recordingRepository.create({
-        audio: uploadAudio.secure_url,
-        title: updateRecording.title,
-      });
+      const newRecording = await this.recordingRepository.update(
+        {
+          audio: uploadAudio.secure_url,
+          title: updateRecording.title,
+        },
+        recordingId,
+      );
 
       unlink(audio.path, (error) => {
         if (error) console.log(error);
