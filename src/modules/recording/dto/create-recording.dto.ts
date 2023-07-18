@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateRecordingDto {
   @IsNotEmpty()
@@ -7,5 +7,6 @@ export class CreateRecordingDto {
 
   @IsNotEmpty()
   @IsString()
-  audio: Express.Multer.File;
+  @IsOptional()
+  audio: string | null;
 }

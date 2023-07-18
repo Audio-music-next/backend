@@ -19,9 +19,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class RecordingController {
   constructor(private readonly recordingService: RecordingService) {}
 
+  @Post()
   @UseInterceptors(FileInterceptor('audio'))
   @Bind(UploadedFile())
-  @Post()
   create(
     @UploadedFile() audio: Express.Multer.File,
     @Body() createRecordingDto: CreateRecordingDto,

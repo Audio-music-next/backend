@@ -3,6 +3,7 @@ import { CreateRecordingDto } from './dto/create-recording.dto';
 import { UpdateRecordingDto } from './dto/update-recording.dto';
 import { RecordingRepository } from './repository/recording.repository';
 import { v2 as cloudinary } from 'cloudinary';
+import { unlink } from 'node:fs';
 @Injectable()
 export class RecordingService {
   constructor(private recordingRepository: RecordingRepository) {}
@@ -14,21 +15,26 @@ export class RecordingService {
       api_secret: process.env.API_SECRET,
     });
 
+
+
     const uploadAudio = await cloudinary.uploader.upload(
-      recording.audio.path,
+      audio.path,
       { resource_type: 'video' },
       (error, result) => {
-        console.log(error);
         return result;
       },
     );
 
     const createRecording = await this.recordingRepository.create({
-      audio: audio.secure_url,
+      audio: uploadAudio.secure_url,
       title: recording.title,
     });
 
-    return this.recordingRepository.create(createRecording);
+    unlink(audio.path, (error) => {
+      if (error) console.log(error);
+    });
+
+    return createRecording;
   }
 
   findAll() {
