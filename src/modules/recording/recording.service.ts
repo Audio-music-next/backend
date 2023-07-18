@@ -1,19 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRecordingDto } from './dto/create-recording.dto';
 import { UpdateRecordingDto } from './dto/update-recording.dto';
-
+import { RecordingRepository } from './repository/recording.repository';
+import { v2 as cloudinary } from 'cloudinary';
+import { unlink } from 'node:fs';
 @Injectable()
 export class RecordingService {
-  create(createRecordingDto: CreateRecordingDto) {
-    return 'This action adds a new recording';
+  constructor(private recordingRepository: RecordingRepository) {}
+
+  async create(recording: CreateRecordingDto, audio: Express.Multer.File) {
+    cloudinary.config({
+      cloud_name: process.env.CLOUD_NAME,
+      api_key: process.env.API_KEY,
+      api_secret: process.env.API_SECRET,
+    });
+
+
+
+    const uploadAudio = await cloudinary.uploader.upload(
+      audio.path,
+      { resource_type: 'video' },
+      (error, result) => {
+        return result;
+      },
+    );
+
+    const createRecording = await this.recordingRepository.create({
+      audio: uploadAudio.secure_url,
+      title: recording.title,
+    });
+
+    unlink(audio.path, (error) => {
+      if (error) console.log(error);
+    });
+
+    return createRecording;
   }
 
   findAll() {
-    return `This action returns all recording`;
+    return this.recordingRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} recording`;
+  findOne(recordingId: number) {
+    return this.recordingRepository.findOne(recordingId);
   }
 
   update(id: number, updateRecordingDto: UpdateRecordingDto) {

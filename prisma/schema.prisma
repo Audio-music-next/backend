@@ -14,8 +14,8 @@ model Recording {
 
   id Int @id @default(autoincrement())
   title String
-  src String
-  date DateTime @default(now())
+  audio String
+  date DateTime? @default(now())
 
   @@map("recordings")
 }
