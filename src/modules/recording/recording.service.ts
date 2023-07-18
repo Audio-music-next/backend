@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRecordingDto } from './dto/create-recording.dto';
 import { UpdateRecordingDto } from './dto/update-recording.dto';
 import { RecordingRepository } from './repository/recording.repository';
@@ -14,8 +14,6 @@ export class RecordingService {
       api_key: process.env.API_KEY,
       api_secret: process.env.API_SECRET,
     });
-
-
 
     const uploadAudio = await cloudinary.uploader.upload(
       audio.path,
@@ -42,7 +40,13 @@ export class RecordingService {
   }
 
   findOne(recordingId: number) {
-    return this.recordingRepository.findOne(recordingId);
+    const findRecording = this.recordingRepository.findOne(recordingId);
+
+    if (!findRecording) {
+      throw new NotFoundException('The recording not found');
+    }
+
+    return findRecording;
   }
 
   update(id: number, updateRecordingDto: UpdateRecordingDto) {
