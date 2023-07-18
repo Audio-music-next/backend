@@ -36,16 +36,20 @@ export class RecordingController {
 
   @Get(':recordingId')
   findOne(@Param('recordingId') id: string) {
-    const recordingId = parseInt(id);
+    const recordingId: number = parseInt(id);
     return this.recordingService.findOne(recordingId);
   }
 
-  @Patch(':id')
+  @Patch(':recordingId')
+  @UseInterceptors(FileInterceptor('audio'))
+  @Bind(UploadedFile())
   update(
-    @Param('id') id: string,
+    @UploadedFile() audio: Express.Multer.File,
+    @Param('recordingId') id: string,
     @Body() updateRecordingDto: UpdateRecordingDto,
   ) {
-    return this.recordingService.update(+id, updateRecordingDto);
+    const recordingId: number = parseInt(id);
+    return this.recordingService.update(updateRecordingDto, audio, recordingId);
   }
 
   @Delete(':recordingId')
