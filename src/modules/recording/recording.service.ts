@@ -39,8 +39,8 @@ export class RecordingService {
     return this.recordingRepository.findAll();
   }
 
-  findOne(recordingId: number) {
-    const findRecording = this.recordingRepository.findOne(recordingId);
+  async findOne(recordingId: number) {
+    const findRecording = await this.recordingRepository.findOne(recordingId);
 
     if (!findRecording) {
       throw new NotFoundException('The recording not found');
@@ -49,8 +49,44 @@ export class RecordingService {
     return findRecording;
   }
 
-  update(id: number, updateRecordingDto: UpdateRecordingDto) {
-    return `This action updates a #${id} recording`;
+  async update(
+    updateRecording: UpdateRecordingDto,
+    audio: Express.Multer.File,
+    recordingId: number,
+  ) {
+    const findRecording = await this.recordingRepository.findOne(recordingId);
+
+    if (!findRecording) {
+      throw new NotFoundException('The recording not found');
+    }
+
+    if (audio) {
+      cloudinary.config({
+        cloud_name: process.env.CLOUD_NAME,
+        api_key: process.env.API_KEY,
+        api_secret: process.env.API_SECRET,
+      });
+
+      const uploadAudio = await cloudinary.uploader.upload(
+        audio.path,
+        { resource_type: 'video' },
+        (error, result) => {
+          return result;
+        },
+      );
+
+      const newRecording = await this.recordingRepository.create({
+        audio: uploadAudio.secure_url,
+        title: updateRecording.title,
+      });
+
+      unlink(audio.path, (error) => {
+        if (error) console.log(error);
+      });
+      return await this.recordingRepository.update(newRecording, recordingId);
+    }
+
+    return await this.recordingRepository.update(updateRecording, recordingId);
   }
 
   remove(id: number) {
