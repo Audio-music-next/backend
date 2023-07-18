@@ -33,4 +33,8 @@ export class RecordingPrismaRepository implements RecordingRepository {
 
     return recording;
   }
+
+  async delete(recordingId: number): Promise<void> {
+    await this.prisma.recording.delete({ where: { id: recordingId } });
+  }
 }

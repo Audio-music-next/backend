@@ -7,4 +7,5 @@ export abstract class RecordingRepository {
   ): Promise<Recording> | Recording;
   abstract findOne(recordingId: number): Promise<Recording> | Recording;
   abstract findAll(): Promise<Recording[]> | Recording[];
+  abstract delete(recordingId: number): Promise<void>;
 }

@@ -48,8 +48,9 @@ export class RecordingController {
     return this.recordingService.update(+id, updateRecordingDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.recordingService.remove(+id);
+  @Delete(':recordingId')
+  remove(@Param('recordingId') id: string) {
+    const recordingId = parseInt(id);
+    return this.recordingService.remove(recordingId);
   }
 }

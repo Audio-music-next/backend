@@ -39,8 +39,8 @@ export class RecordingService {
     return this.recordingRepository.findAll();
   }
 
-  findOne(recordingId: number) {
-    const findRecording = this.recordingRepository.findOne(recordingId);
+  async findOne(recordingId: number) {
+    const findRecording = await this.recordingRepository.findOne(recordingId);
 
     if (!findRecording) {
       throw new NotFoundException('The recording not found');
@@ -53,7 +53,13 @@ export class RecordingService {
     return `This action updates a #${id} recording`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} recording`;
+  async remove(recordingId: number) {
+    const findRecording = await this.recordingRepository.findOne(recordingId);
+
+    if (!findRecording) {
+      throw new NotFoundException('The recording not found');
+    }
+
+    return await this.recordingRepository.delete(recordingId);
   }
 }
